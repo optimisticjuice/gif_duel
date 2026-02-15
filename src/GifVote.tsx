@@ -4,14 +4,14 @@ import React, {
   useEffect,
   useMemo,
   useReducer,
-  useState,
+  useState
 } from "react";
 
 /**
  * GIF Duel Voting (React + TypeScript)
  * - Pick a theme (search term)
  * - Fetch a pool of GIFs from GIPHY
- * - Show 2 GIFs side-by-side
+ * - Show 2 GIFs sidehttps://deepwiki.com/optimisticjuice/gif_duel-by-side
  * - Vote which is better via 👍 Like or 😂 Funny
  *
  * Hooks constraints:
@@ -30,10 +30,11 @@ import React, {
  */
 
 // -----------------------------
-// Types
+// 
 // -----------------------------
 
 type VoteType = "like" | "funny";
+// types and the 
 type Side = "left" | "right";
 
 type GifItem = {
@@ -577,7 +578,7 @@ function GifArena() {
   if (state.isLoading) {
     return (
       <div style={{ marginTop: 18, padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
-        Loading GIFs… (summoning the meme spirits—jk, just HTTP)
+        Loading GIFs… (meme time just wait...)
       </div>
     );
   }
@@ -797,4 +798,4 @@ function HistoryPanel() {
   );
 }
 
-export { HistoryPanel, Scoreboard, GifArena, GifDuelProvider };
+export { HistoryPanel,Scoreboard, GifArena, GifDuelProvider };

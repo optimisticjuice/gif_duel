@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, {
   createContext,
   useContext,
@@ -6,28 +7,6 @@ import React, {
   useReducer,
   useState,
 } from "react";
-
-/**
- * GIF Duel Voting (React + TypeScript)
- * - Pick a theme (search term)
- * - Fetch a pool of GIFs from GIPHY
- * - Show 2 GIFs side-by-side
- * - Vote which is better via 👍 Like or 😂 Funny
- *
- * Hooks constraints:
- * ✅ useReducer: game state + transitions
- * ✅ useState: UI-only state (theme input, dropdown, toggles)
- * ✅ createContext + useContext: share state/dispatch/helpers across components
- *
- * SETUP:
- * 1) Create a GIPHY API key: https://developers.giphy.com/
- * 2) Add an env var:
- *    - Vite:  VITE_GIPHY_API_KEY=xxxxx
- *    - CRA:   REACT_APP_GIPHY_API_KEY=xxxxx
- *
- * Note: This file is written as a single "App.tsx" for simplicity.
- * You can split it into files later (recommended).
- */
 
 // -----------------------------
 // Types
@@ -191,12 +170,12 @@ function gameReducer(state: GameState, action: Action): GameState {
       if (last.voteType === "like") {
         nextScore.like[last.winnerSide] = Math.max(
           0,
-          nextScore.like[last.winnerSide] - 1
+          nextScore.like[last.winnerSide] - 1,
         );
       } else {
         nextScore.funny[last.winnerSide] = Math.max(
           0,
-          nextScore.funny[last.winnerSide] - 1
+          nextScore.funny[last.winnerSide] - 1,
         );
       }
 
@@ -306,7 +285,7 @@ function GifDuelProvider({ children }: { children: React.ReactNode }) {
   async function fetchPool(theme: string): Promise<GifItem[]> {
     if (!apiKey) {
       throw new Error(
-        "Missing GIPHY API key. Set VITE_GIPHY_API_KEY or REACT_APP_GIPHY_API_KEY."
+        "Missing GIPHY API key. Set VITE_GIPHY_API_KEY or REACT_APP_GIPHY_API_KEY.",
       );
     }
 
@@ -329,10 +308,14 @@ function GifDuelProvider({ children }: { children: React.ReactNode }) {
     const data = Array.isArray(json?.data) ? json.data : [];
 
     // Normalize into our GifItem type
-    const normalized = data.map(normalizeGif).filter((g: GifItem) => g.displayUrl);
+    const normalized = data
+      .map(normalizeGif)
+      .filter((g: GifItem) => g.displayUrl);
 
     if (normalized.length < 2) {
-      throw new Error("Not enough GIF results for that theme. Try another theme.");
+      throw new Error(
+        "Not enough GIF results for that theme. Try another theme.",
+      );
     }
 
     return normalized;
@@ -363,7 +346,8 @@ function GifDuelProvider({ children }: { children: React.ReactNode }) {
 
       // Pick two distinct GIFs from the pool
       const pair = pickTwoDistinct(pool);
-      if (!pair) throw new Error("Not enough GIFs in the pool. Try another theme.");
+      if (!pair)
+        throw new Error("Not enough GIFs in the pool. Try another theme.");
 
       const [leftGif, rightGif] = pair;
 
@@ -432,7 +416,9 @@ function GifDuelProvider({ children }: { children: React.ReactNode }) {
           </span>
         </header>
 
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}>
+        <div
+          style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 12 }}
+        >
           <ThemePicker />
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
             <label style={{ opacity: 0.85 }}>Rating</label>
@@ -483,8 +469,17 @@ function ThemePicker() {
   const [isOpen, setIsOpen] = useState(false);
 
   const suggestions = useMemo(
-    () => ["cats", "anime", "football", "coding", "memes", "dance", "fails", "victory"],
-    []
+    () => [
+      "cats",
+      "anime",
+      "football",
+      "coding",
+      "memes",
+      "dance",
+      "fails",
+      "victory",
+    ],
+    [],
   );
 
   useEffect(() => {
@@ -557,7 +552,13 @@ function ThemePicker() {
             ))}
           </div>
 
-          <div style={{ marginTop: 10, display: "flex", justifyContent: "flex-end" }}>
+          <div
+            style={{
+              marginTop: 10,
+              display: "flex",
+              justifyContent: "flex-end",
+            }}
+          >
             <button
               onClick={() => setIsOpen(false)}
               style={{ padding: "6px 10px", cursor: "pointer" }}
@@ -576,7 +577,14 @@ function GifArena() {
 
   if (state.isLoading) {
     return (
-      <div style={{ marginTop: 18, padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+      <div
+        style={{
+          marginTop: 18,
+          padding: 16,
+          border: "1px solid #ddd",
+          borderRadius: 12,
+        }}
+      >
         Loading GIFs… (summoning the meme spirits—jk, just HTTP)
       </div>
     );
@@ -606,7 +614,14 @@ function GifArena() {
 
   if (!left || !right) {
     return (
-      <div style={{ marginTop: 18, padding: 16, border: "1px solid #ddd", borderRadius: 12 }}>
+      <div
+        style={{
+          marginTop: 18,
+          padding: 16,
+          border: "1px solid #ddd",
+          borderRadius: 12,
+        }}
+      >
         No GIF pair yet.
       </div>
     );
@@ -647,7 +662,14 @@ function GifCard({
     <div style={{ border: "1px solid #ddd", borderRadius: 12, padding: 12 }}>
       <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
         <div style={{ fontWeight: 700 }}>{side.toUpperCase()}</div>
-        <div style={{ fontSize: 12, opacity: 0.7, maxWidth: 280, textAlign: "right" }}>
+        <div
+          style={{
+            fontSize: 12,
+            opacity: 0.7,
+            maxWidth: 280,
+            textAlign: "right",
+          }}
+        >
           {gif.title || "Untitled"}
         </div>
       </div>
@@ -762,8 +784,21 @@ function HistoryPanel() {
   const top = state.history.slice(0, 8);
 
   return (
-    <div style={{ marginTop: 18, border: "1px solid #ddd", borderRadius: 12, padding: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}>
+    <div
+      style={{
+        marginTop: 18,
+        border: "1px solid #ddd",
+        borderRadius: 12,
+        padding: 12,
+      }}
+    >
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "baseline",
+        }}
+      >
         <div style={{ fontWeight: 800 }}>Recent Votes</div>
         <button
           onClick={() => dispatch({ type: "RESET_RUN" })}

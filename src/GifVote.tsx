@@ -9,10 +9,11 @@ import React, {
 } from "react";
 
 // -----------------------------
-// Types
+//
 // -----------------------------
 
 type VoteType = "like" | "funny";
+// types and the
 type Side = "left" | "right";
 
 type GifItem = {
